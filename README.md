@@ -27,5 +27,5 @@ writeFile outfile <$> mkIn1k "id" . words <$> readFile infile
 
 ### make like or words
 ```
-writeFile outfile <$> mkLike "val" . words <$> readFile infile
+writeFile outfile <$> mkLikeE "val" . words <$> readFile infile
 ```

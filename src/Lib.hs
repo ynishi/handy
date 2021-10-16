@@ -43,9 +43,19 @@ deq (Dif s e) w  = deq (Pre s) . deq (Suf e) $ w
 
 sq = Single "'"
 
-mkLike t = mkOr . map (deq liq . deq sq)
+partialMatch = Single "%"
+
+mkLike m t = mkOr . map (deq liq . deq sq . deq m)
   where
     liq = Pre (t ++ " like ")
+
+mkLikeE = mkLike NonQ
+
+mkLikeP = mkLike (Single "%")
+
+mkLikeL = mkLike (Suf "%")
+
+mkLikeR = mkLike (Pre "%")
 
 mkOr = rep (Dif "(" ")") " or"
 
@@ -64,7 +74,8 @@ run f pre = do
   x <- words . C8.unpack <$> B.readFile infile
   p "read ok"
   let x' = f x
-  p "ope ok"
+  p "ope ok:"
+  p $ "sample:" ++ take 20 x'
   let outfile = inData (pre ++ ".out.txt")
   p $ "outfile:" ++ outfile
   B.writeFile outfile $ C8.pack x'
